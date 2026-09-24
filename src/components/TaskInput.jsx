@@ -33,23 +33,37 @@ export function TaskInput({ onAddTask, isAtLimit, taskCount, theme }) {
           <input
             type="text"
             value={title}
+            maxLength={75}
             onChange={(e) => {
               setTitle(capitalizeFirstLetter(e.target.value));
               if (errorMsg) setErrorMsg('');
             }}
             disabled={isAtLimit}
             placeholder={isAtLimit ? 'Limite de 10 tarefas atingido' : 'Adicionar nova tarefa'}
-            className={`w-full px-4 py-3 text-sm rounded-xl outline-none transition-all duration-200 border ${
+            className={`w-full pl-4 pr-14 py-3 text-sm rounded-xl outline-none transition-all duration-200 border ${
               isDark
                 ? 'bg-dark-input text-dark-textMain placeholder-dark-textSec border-white/5 focus:border-[#5B8DEF]/60 focus:ring-1 focus:ring-[#5B8DEF]/40'
                 : 'bg-light-input text-light-textMain placeholder-light-textSec border-transparent focus:border-[#85B4BA] focus:ring-1 focus:ring-[#85B4BA]'
             } ${isAtLimit ? 'opacity-60 cursor-not-allowed' : ''}`}
           />
+          {title.length > 0 && (
+            <span
+              className={`absolute right-3 bottom-2.5 text-[11px] pointer-events-none ${
+                title.length >= 75
+                  ? 'text-red-400'
+                  : title.length >= 60
+                  ? 'text-amber-400'
+                  : isDark ? 'text-dark-textSec' : 'text-light-textSec'
+              }`}
+            >
+              {title.length}/75
+            </span>
+          )}
         </div>
 
         <button
           type="submit"
-          disabled={isAtLimit || !title.trim()}
+          disabled={isAtLimit || title.trim().length < 3}
           title="Adicionar tarefa"
           className={`p-3 rounded-xl transition-all duration-200 flex items-center justify-center font-bold shadow-sm ${
             isDark
@@ -72,6 +86,15 @@ export function TaskInput({ onAddTask, isAtLimit, taskCount, theme }) {
           <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
           <span>Você atingiu o limite máximo de 10 tarefas. Conclua ou exclua tarefas para adicionar novas.</span>
         </div>
+      )}
+
+      {title.trim().length > 0 && title.trim().length < 3 && !isAtLimit && (
+        <p
+          key={title.trim().length}
+          className={`animate-fade-slide-down text-xs mt-1.5 px-1 ${isDark ? 'text-dark-textSec' : 'text-light-textMain/60'}`}
+        >
+          Mínimo de 3 caracteres · faltam {3 - title.trim().length}
+        </p>
       )}
 
       {errorMsg && !isAtLimit && (

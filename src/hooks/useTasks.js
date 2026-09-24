@@ -114,6 +114,9 @@ export function useTasks() {
     if (!trimmed) {
       return { success: false, message: 'Digite um título para a tarefa.' };
     }
+    if (trimmed.length < 3) {
+      return { success: false, message: 'O título deve ter pelo menos 3 caracteres.' };
+    }
 
     const newTask = {
       id: `${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
@@ -241,17 +244,18 @@ export function useTasks() {
     });
   };
 
-  // Atualizar tarefa em qualquer array
+  // Atualizar tarefa (somente permitida para tarefas ativas)
   const updateTask = (id, fields) => {
+    // Se a tarefa estiver nas concluídas, não permite alteração
+    const isCompleted = completedTasks.some(task => task.id === id);
+    if (isCompleted) return;
+
     const formattedFields = { ...fields };
     if (formattedFields.title) {
       formattedFields.title = capitalizeFirstLetter(formattedFields.title);
     }
 
     setActiveTasks(prev =>
-      prev.map(task => (task.id === id ? { ...task, ...formattedFields } : task))
-    );
-    setCompletedTasks(prev =>
       prev.map(task => (task.id === id ? { ...task, ...formattedFields } : task))
     );
   };

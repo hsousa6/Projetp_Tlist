@@ -95,14 +95,31 @@ export function TaskItem({
           {task.completed && <Check className="w-3.5 h-3.5 stroke-[3]" />}
         </div>
 
-        {/* Task Title */}
-        <span
-          className={`text-sm font-medium truncate transition-all duration-200 ${
-            task.completed ? 'line-through opacity-70' : ''
-          }`}
-        >
-          {task.title}
-        </span>
+        {/* Task Title + completion date */}
+        <div className="flex flex-col min-w-0">
+          <span
+            className={`text-sm font-medium truncate transition-all duration-200 ${
+              task.completed ? 'line-through opacity-70' : ''
+            }`}
+          >
+            {task.title}
+          </span>
+          {task.completed && task.completedAt && (() => {
+            try {
+              const d = new Date(task.completedAt);
+              const day   = String(d.getDate()).padStart(2, '0');
+              const month = String(d.getMonth() + 1).padStart(2, '0');
+              const year  = String(d.getFullYear()).slice(-2);
+              const hours = String(d.getHours()).padStart(2, '0');
+              const mins  = String(d.getMinutes()).padStart(2, '0');
+              return (
+                <span className={`text-[10px] leading-tight mt-0.5 opacity-50 ${isDark ? 'text-dark-textSec' : 'text-light-textMain'}`}>
+                  {day}/{month}/{year} · {hours}:{mins}
+                </span>
+              );
+            } catch { return null; }
+          })()}
+        </div>
       </div>
 
       {/* Right side: File/Document Icon to open Details */}
@@ -111,13 +128,13 @@ export function TaskItem({
           e.stopPropagation();
           onOpenDetails(task);
         }}
-        title="Ver detalhes da tarefa"
+        title={task.completed ? 'Ver detalhes da tarefa' : 'Editar tarefa'}
         className={`p-1.5 rounded-lg transition-all duration-150 ml-2 flex-shrink-0 ${
           isDark
             ? 'text-[#5A6D82] hover:text-[#5B8DEF] hover:bg-white/5'
             : 'text-light-fileIcon hover:text-black hover:bg-black/5'
         }`}
-        aria-label="Abrir detalhes e edição"
+        aria-label={task.completed ? 'Ver detalhes da tarefa' : 'Editar tarefa'}
       >
         <FileText className="w-4 h-4" />
       </button>

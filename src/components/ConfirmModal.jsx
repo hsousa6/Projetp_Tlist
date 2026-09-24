@@ -24,13 +24,19 @@ export function ConfirmModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
+    <div
+      className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn"
+      onClick={onCancel}
+      role="dialog"
+      aria-modal="true"
+    >
       <div
         className={`w-full max-w-sm rounded-2xl p-5 shadow-2xl border transition-all transform scale-100 ${
           isDark
             ? 'bg-[#1D1D1B] border-white/10 text-dark-textMain'
             : 'bg-[#CBE7EB] border-black/10 text-light-textMain'
         }`}
+        onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start gap-3.5 mb-4">
           <div

@@ -47,6 +47,14 @@ export function App() {
   };
 
   const handleSaveTaskDetails = (taskId, fields) => {
+    const isCompleted = completedTasks.some((t) => t.id === taskId);
+    if (isCompleted) {
+      setToast({
+        type: 'error',
+        message: 'Não é possível editar uma atividade concluída.',
+      });
+      return;
+    }
     updateTask(taskId, fields);
     setSelectedTaskId(null);
     setToast({
@@ -66,7 +74,7 @@ export function App() {
         setSelectedTaskId(null);
       }
       setToast({
-        type: 'success',
+        type: 'error',
         message: `Atividade "${taskToDelete.title}" excluída com sucesso!`,
       });
       setTaskToDelete(null);
@@ -176,18 +184,18 @@ export function App() {
           onMoveToActive={handleMoveToActive}
           theme={theme}
         />
-
-        {/* Painel Inferior de Detalhes / Edição */}
-        {currentEditingTask && (
-          <TaskEditPanel
-            task={currentEditingTask}
-            onSave={handleSaveTaskDetails}
-            onRequestDelete={handleRequestDelete}
-            onClose={handleCloseDetails}
-            theme={theme}
-          />
-        )}
       </div>
+
+      {/* Modal de Edição de Tarefa */}
+      {currentEditingTask && (
+        <TaskEditPanel
+          task={currentEditingTask}
+          onSave={handleSaveTaskDetails}
+          onRequestDelete={handleRequestDelete}
+          onClose={handleCloseDetails}
+          theme={theme}
+        />
+      )}
 
       {/* Modal de Confirmação para Exclusão */}
       <ConfirmModal

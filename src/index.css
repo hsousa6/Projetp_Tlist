@@ -32,3 +32,19 @@
   opacity: 0.45;
   transform: scale(0.98);
 }
+
+/* Fade + slide down for hint messages */
+@keyframes fadeSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-slide-down {
+  animation: fadeSlideDown 0.2s ease-out forwards;
+}
